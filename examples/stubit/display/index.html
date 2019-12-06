@@ -3,27 +3,39 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
-  <script src="https://unpkg.com/obniz@2.2.0/obniz.js"></script>
+  <script src="https://unpkg.com/obniz@2.5.0/obniz.js"></script>
   <script src="../../../artec.js" ></script>
 </head>
 <body>
 
 <div id="obniz-debug"></div>
 <h1>obniz instant HTML</h1>
-<button id="red">red</button>
-<button id="green">green</button>
-<button id="blue">blue</button>
+<br/>
+<h2>Display</h2>
+<button id="on">on</button>
+<button id="off">off</button><br/>
+<button id="get-is-on">is on</button> <span id="is-on"></span>
+
+<br/><br/>
+<h2>Color</h2>
+<button id="red">Red</button>
+<button id="green">Green</button>
+<button id="blue">Blue</button> <br/>
+<button id="get-color">Get color</button> <span id="color"></span>
+
+<br/><br/>
+<button id="clear">Clear</button>
 
 <script>
 
 
-  var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
-  stubit.obniz.debugprint = true;
+  // var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+  var stubit = new Artec.StuduinoBit("69292984");
   stubit.onconnect = async function () {
-    stubit.display.onWait();
+
+    stubit.display.on();
 
     function oneColor(color) {
-
       //1pxずつデータ通信をしないために一度offにする
       stubit.display.off();
       for (let x = 0; x < 5; x++) {
@@ -31,21 +43,42 @@
           stubit.display.setPixcel(x,y,color);
         }
       }
-      stubit.display.onWait();
+      stubit.display.on();
     }
-    stubit.display.setPixcel(0,0,[0x4f, 0, 0]);
+
+    $("#on").click(() => {
+      stubit.display.on()
+    })
+    $("#off").click(() => {
+      stubit.display.off()
+    })
+    $("#get-is-on").click(() => {
+      let isOn = stubit.display.isOn()
+      $("#is-on").text(isOn)
+    })
+
+
     $("#red").click(() => {
       oneColor([0x4f, 0, 0]);
     })
     $("#green").click(() => {
       oneColor([0, 0x4f, 0]);
     })
-
     $("#blue").click(() => {
       oneColor([0, 0, 0x4f]);
     })
+
+    $("#get-color").click(() => {
+      let color = stubit.display.getPixel(0,0)
+      $("#color").text("R,G,B="+color)
+    })
+
+    $("#clear").click(() => {
+      stubit.display.clear()
+    })
+
     //初期
-    oneColor([0x4f, 0, 0]);
+    oneColor([30, 30, 30]);
 
     //wifi接続／動作確認用
     ledBlink();
