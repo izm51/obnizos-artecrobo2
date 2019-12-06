@@ -10,20 +10,46 @@
 
 <div id="obniz-debug"></div>
 <h1>obniz instant HTML</h1>
+<br/>
+<h2>Status</h2>
+buttonA:<span id="is-pressed-buttonA"></span><br/>
+buttonB:<span id="is-pressed-buttonB"></span>
 <br/><br/>
-buttonA:<span id="buttonA"></span><br/>
-buttonB:<span id="buttonB"></span>
-
+<h2>Get presses</h2>
+<button id="get-presses">Get presses</button><br />
+buttonA:<span id="get-presses-buttonA">-</span><br/>
+buttonB:<span id="get-presses-buttonB">-</span>
+<br/><br/>
+<h2>Was pressed</h2>
+<button id="was-pressed">Was pressed</button><br />
+buttonA:<span id="was-pressed-buttonA">-</span><br />
+buttonB:<span id="was-pressed-buttonB">-</span>
 
 <script>
 
-  var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+  // var stubit = new Artec.StuduinoBit("YOUR_STUDUIOBIT_ID");
+  var stubit = new Artec.StuduinoBit("69292984");
   stubit.onconnect = async function () {
+
+    $("#get-presses").click(async () => {
+      let pressesA = await stubit.button_a.getPresses();
+      let pressesB = await stubit.button_b.getPresses();
+      $("#get-presses-buttonA").text(pressesA);
+      $("#get-presses-buttonB").text(pressesB);
+    })
+
+    $("#was-pressed").click(async () => {
+      let wasPressedA = await stubit.button_a.wasPressed();
+      let wasPressedB = await stubit.button_b.wasPressed();
+      $("#was-pressed-buttonA").text(wasPressedA);
+      $("#was-pressed-buttonB").text(wasPressedB);
+    })
+
     while(1){
       let pressedA = await stubit.button_a.isPressedWait();
       let pressedB = await stubit.button_b.isPressedWait();
-      $("#buttonA").text(pressedA ? "Pressed" : "none");
-      $("#buttonB").text(pressedB ? "Pressed" : "none");
+      $("#is-pressed-buttonA").text(pressedA ? "Pressed" : "none");
+      $("#is-pressed-buttonB").text(pressedB ? "Pressed" : "none");
     }
 
     //wifi接続／動作確認用
